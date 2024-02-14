@@ -1,7 +1,7 @@
-const fs = require('fs');
-const path = require('path');
+const { getDb, ObjectId } = require('../../db.js');
 
-const createOrder = (req, res) => {
+const createOrder = async (req, res) => {
+    const db = getDb();
     const item = req.body;
 
     if (!Object.keys(item).length) {
@@ -10,13 +10,7 @@ const createOrder = (req, res) => {
         return;
     }
 
-    const dataOrders = fs.readFileSync(path.join(process.cwd(), 'data-orders.json'), 'utf-8');
-
-    const ordersList = JSON.parse(dataOrders);
-    // item.id = ids
-    ordersList.push(item)
-
-    fs.writeFileSync(path.join(process.cwd(), 'data-orders.json'), JSON.stringify(ordersList, null, 4), 'utf-8');
+    await db.collection('data-orders').insertOne(item);
 
     res.json({ 'massage': 'Заказ принят в работу!' });
 }
