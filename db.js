@@ -1,4 +1,4 @@
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 
 const url = "mongodb://0.0.0.0:27017/";
 const client = new MongoClient(url);
@@ -23,4 +23,4 @@ function getDb() {
     return db;
 }
 
-module.exports = getDb;
+module.exports = { getDb, ObjectId };

@@ -8,5 +8,4 @@ router.use(express.json());
 router.post('/_create-dish', createDish);
 router.delete('/_delete-dish/:id', deleteDish);
 
-
 module.exports = router;

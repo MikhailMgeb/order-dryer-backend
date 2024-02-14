@@ -1,21 +1,23 @@
-const fs = require('fs');
-const path = require('path');
+const { getDb, ObjectId } = require('../../db.js');
 
-const deleteDish = (req, res) => {
-    const id = req.params.id
-    console.log(id);
+const deleteDish = async (req, res) => {
+    const db = getDb();
+    let id;
 
-    if (id.length === 0) {
-        res.status(404);
-        res.json({ 'massage': 'Нет такого блюда!' });
+    try {
+        id = new ObjectId(req.params.id);
+    } catch (error) {
+        res.sendStatus(400);
         return;
     }
 
-    const database = fs.readFileSync(path.join(process.cwd(), 'database.json'), 'utf-8');
+    const result = await db.collection('menu').deleteOne({ _id: id });
 
-    const menuList = JSON.parse(database).filter(item => item.id !== id);
+    if (result.deletedCount === 0) {
+        res.sendStatus(404);
 
-    fs.writeFileSync(path.join(process.cwd(), 'database.json'), JSON.stringify(menuList, null, 4), 'utf-8');
+        return;
+    }
 
     res.json({ 'massage': 'Блюдо успешно удалено!' });
 }

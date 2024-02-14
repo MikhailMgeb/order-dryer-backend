@@ -6,7 +6,7 @@ const adminHandlers = require('./src/admin-menu');
 const adminOrder = require('./src/admin-order');
 
 const cors = require('cors');
-const getDb = require('./db');
+const { getDb, ObjectId } = require('./db');
 
 app.use(cors());
 app.use(express.json()); // Тело запроса
@@ -26,13 +26,15 @@ app.get('/image/:filename', (req, res) => {
 app.get('/menu-list', async (req, res) => {
     const db = getDb();
     const result = await db.collection('menu').find({}).toArray();
-    
+
     res.json(result);
 });
 
-app.get('/orders-list', (req, res) => {
+app.get('/orders-list', async (req, res) => {
     const db = getDb();
-    res.sendFile(__dirname + '/data-orders.json');
+    const result = await db.collection('data-orders').find({}).toArray();
+
+    res.json(result);
 });
 
 app.listen(port, () => {

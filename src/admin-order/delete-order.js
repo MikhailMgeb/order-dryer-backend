@@ -1,21 +1,24 @@
-const fs = require('fs');
-const path = require('path');
+const { getDb, ObjectId } = require('../../db.js');
 
-const deleteOrder = (req, res) => {
-    const id = req.params.id;
-    console.log(id);
+const deleteOrder = async (req, res) => {
+    const db = getDb();
+    let id;
 
-    if (!id.length) {
-        res.status(404);
-        res.json({ 'massage': 'Вы удалили пустоту!' });
+    try {
+        id = new ObjectId(req.params.id);
+    } catch (error) {
+        res.sendStatus(400);
+
         return;
     }
 
-    const dataOrders = fs.readFileSync(path.join(process.cwd(), 'data-orders.json'), 'utf-8');
+    const orderList = await db.collection('data-orders').deleteOne({ _id: id });
 
-    const orderList = JSON.parse(dataOrders).filter(itemOrder => itemOrder.id !== id);
+    if (orderList.deletedCount === 0) {
+        res.sendStatus(404);
 
-    fs.writeFileSync(path.join(process.cwd(), 'data-orders.json'), JSON.stringify(orderList, null, 4), 'utf-8');
+        return;
+    }
 
     res.json({ 'massage': 'Заказ успешно собран!' });
 }

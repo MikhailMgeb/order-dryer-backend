@@ -1,7 +1,7 @@
-const fs = require('fs');
-const path = require('path');
+const { getDb, ObjectId } = require('../../db.js');
 
-const createDish = (req, res) => {
+const createDish = async (req, res) => {
+    const db = getDb();
     const item = req.body;
 
     if (!Object.keys(item).length) {
@@ -10,21 +10,17 @@ const createDish = (req, res) => {
         return;
     }
 
-    const database = fs.readFileSync(path.join(process.cwd(), 'database.json'), 'utf-8');
-
-    const menuList = JSON.parse(database);
+    const menuList = await db.collection('menu').find({}).toArray();
 
     for (const dish of menuList) {
-        if (dish.id === item.id) {
+        if (dish.name === item.name) {
             res.status(404);
             res.json({ 'massage': 'Такое блюдо уже существует!' });
             return;
         }
     }
 
-    menuList.push(item)
-
-    fs.writeFileSync(path.join(process.cwd(), 'database.json'), JSON.stringify(menuList, null, 4), 'utf-8');
+    await db.collection('menu').insertOne(item);
 
     res.json({ 'massage': 'Успешно добавлен!' });
 }
