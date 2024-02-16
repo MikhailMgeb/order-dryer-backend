@@ -19,7 +19,7 @@ const deleteDish = async (req, res) => {
         return;
     }
 
-    res.json({ 'massage': 'Блюдо успешно удалено!' });
+    res.json({ 'message': 'Блюдо успешно удалено!' });
 }
 
 module.exports = deleteDish;

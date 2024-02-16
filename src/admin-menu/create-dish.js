@@ -6,7 +6,7 @@ const createDish = async (req, res) => {
 
     if (!Object.keys(item).length) {
         res.status(404);
-        res.json({ 'massage': 'Вы отправили пустоту!' });
+        res.json({ 'message': 'Вы отправили пустоту!' });
         return;
     }
 
@@ -15,14 +15,14 @@ const createDish = async (req, res) => {
     for (const dish of menuList) {
         if (dish.name === item.name) {
             res.status(404);
-            res.json({ 'massage': 'Такое блюдо уже существует!' });
+            res.json({ 'message': 'Такое блюдо уже существует!' });
             return;
         }
     }
 
     await db.collection('menu').insertOne(item);
 
-    res.json({ 'massage': 'Успешно добавлен!' });
+    res.json({ 'message': 'Успешно добавлен!' });
 }
 
 module.exports = createDish;
