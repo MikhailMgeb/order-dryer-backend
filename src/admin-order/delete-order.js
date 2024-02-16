@@ -20,7 +20,7 @@ const deleteOrder = async (req, res) => {
         return;
     }
 
-    res.json({ 'massage': 'Заказ успешно собран!' });
+    res.json({ 'message': 'Заказ успешно собран!' });
 }
 
 module.exports = deleteOrder;

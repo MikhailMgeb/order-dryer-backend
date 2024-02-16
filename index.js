@@ -6,7 +6,7 @@ const adminHandlers = require('./src/admin-menu');
 const adminOrder = require('./src/admin-order');
 
 const cors = require('cors');
-const { getDb, ObjectId } = require('./db');
+const { getDb } = require('./db');
 
 app.use(cors());
 app.use(express.json()); // Тело запроса
